@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: streakly
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: streakly_user
+      POSTGRES_PASSWORD: streakly_pass
+      POSTGRES_DB: streakly_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - streakly_data:/var/lib/postgresql/data
+
+volumes:
+  streakly_data:
