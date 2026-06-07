@@ -1,0 +1,4 @@
+package dev.oudom.streakly.features.user;
+
+public class UserServiceImpl {
+}
