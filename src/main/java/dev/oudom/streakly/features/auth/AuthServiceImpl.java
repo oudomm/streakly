@@ -1,5 +1,6 @@
 package dev.oudom.streakly.features.auth;
 
+import dev.oudom.streakly.exception.AppException;
 import dev.oudom.streakly.features.auth.dto.AuthResponse;
 import dev.oudom.streakly.features.auth.dto.LoginRequest;
 import dev.oudom.streakly.features.auth.dto.RegisterRequest;
@@ -7,6 +8,7 @@ import dev.oudom.streakly.features.user.User;
 import dev.oudom.streakly.features.user.UserRepository;
 import dev.oudom.streakly.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Check if email already exists
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Email already exists");
+            throw new AppException("Email already exists", HttpStatus.CONFLICT);
         }
 
         // Build new user
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Load user from DB
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         // Generate token and return
         String token = jwtService.generateToken(user);
