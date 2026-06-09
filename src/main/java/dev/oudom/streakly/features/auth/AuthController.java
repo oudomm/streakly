@@ -1,5 +1,6 @@
 package dev.oudom.streakly.features.auth;
 
+import dev.oudom.streakly.common.ApiResponse;
 import dev.oudom.streakly.features.auth.dto.AuthResponse;
 import dev.oudom.streakly.features.auth.dto.LoginRequest;
 import dev.oudom.streakly.features.auth.dto.RegisterRequest;
@@ -20,18 +21,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
+    public ResponseEntity<ApiResponse<AuthResponse>> register(
             @Valid @RequestBody RegisterRequest request
     ) {
+        AuthResponse data = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.register(request));
+                .body(ApiResponse.success("Registered successfully", data));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(authService.login(request));
+        AuthResponse data = authService.login(request);
+        return ResponseEntity.ok(ApiResponse.success("Login successfully", data));
     }
 
 }

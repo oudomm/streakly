@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ErrorResponse> handleAppException(AppException ex) {
         ErrorResponse error = ErrorResponse.builder()
+                .success(false)
                 .status(ex.getStatus().value())
                 .message(ex.getMessage())
                 .build();
@@ -23,6 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         ErrorResponse error = ErrorResponse.builder()
+                .success(false)
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .message("Invalid email or password")
                 .build();
@@ -39,6 +41,7 @@ public class GlobalExceptionHandler {
                 .orElse("Validation failed");
 
         ErrorResponse error = ErrorResponse.builder()
+                .success(false)
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(message)
                 .build();
@@ -48,6 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         ErrorResponse error = ErrorResponse.builder()
+                .success(false)
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message("Something went wrong")
                 .build();
