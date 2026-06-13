@@ -60,6 +60,7 @@ public class SecurityConfig {
     }
 
     // AuthenticationProvider — tells Spring how to authenticate
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
