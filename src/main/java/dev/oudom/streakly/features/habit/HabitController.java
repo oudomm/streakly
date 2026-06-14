@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/habits")
@@ -30,5 +31,12 @@ public class HabitController {
         List<HabitResponse> data = habitService.getAll();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Get all habits successfully", data));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<HabitResponse>> getById(@PathVariable UUID id) {
+        HabitResponse data = habitService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success("Get habit successfully", data));
     }
 }

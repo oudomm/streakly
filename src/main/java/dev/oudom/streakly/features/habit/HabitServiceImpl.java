@@ -49,7 +49,14 @@ public class HabitServiceImpl implements HabitService{
 
     @Override
     public HabitResponse getById(UUID id) {
-        return null;
+        User user = getCurentUser();
+        log.info("gtById: {}, by user: {}", id, user.getUsername());
+        Habit habit = habitRepository.findById(id)
+                .orElseThrow(() -> new AppException("Habit not found", HttpStatus.NOT_FOUND));
+        if (!habit.getUser().getId().equals(user.getId())) {
+            throw new AppException("Habit doesn't belong to current user", HttpStatus.FORBIDDEN);
+        }
+        return habitMapper.habitToHabitResponse(habit);
     }
 
     @Override
