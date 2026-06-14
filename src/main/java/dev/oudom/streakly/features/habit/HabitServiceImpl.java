@@ -33,8 +33,8 @@ public class HabitServiceImpl implements HabitService{
 
     @Override
     public HabitResponse create(HabitRequest request) {
-        log.info("create: {}", request);
         User user = getCurentUser();
+        log.info("create: {}, by user: {}", request, user.getUsername());
         Habit habit = habitMapper.habitRequestToHabitResponse(request);
         habit.setUser(user);
         return habitMapper.habitToHabitResponse(habitRepository.save(habit));
@@ -42,7 +42,9 @@ public class HabitServiceImpl implements HabitService{
 
     @Override
     public List<HabitResponse> getAll() {
-        return List.of();
+        User user = getCurentUser();
+        log.info("getAll by user: {}", user.getUsername());
+        return habitRepository.findByUserId(user.getId()).stream().map(habitMapper::habitToHabitResponse).toList();
     }
 
     @Override
