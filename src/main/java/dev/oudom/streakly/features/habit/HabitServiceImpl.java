@@ -3,6 +3,7 @@ package dev.oudom.streakly.features.habit;
 import dev.oudom.streakly.exception.AppException;
 import dev.oudom.streakly.features.habit.dto.HabitRequest;
 import dev.oudom.streakly.features.habit.dto.HabitResponse;
+import dev.oudom.streakly.features.habit.dto.UpdateHabitRequest;
 import dev.oudom.streakly.features.user.User;
 import dev.oudom.streakly.features.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +61,17 @@ public class HabitServiceImpl implements HabitService{
     }
 
     @Override
-    public HabitResponse update(UUID id, HabitRequest request) {
-        return null;
+    public HabitResponse update(UUID id, UpdateHabitRequest request) {
+        User user = getCurentUser();
+        log.info("update id: {}, request: {}, by user: {}", id, request, user.getUsername());
+        Habit habit = habitRepository.findById(id)
+                .orElseThrow(() -> new AppException("Habit not found", HttpStatus.NOT_FOUND));
+        if (!habit.getUser().getId().equals(user.getId())) {
+            throw new AppException("Habit doesn't belong to current user", HttpStatus.FORBIDDEN);
+        }
+        habitMapper.updateHabitRequestToHabit(request, habit);
+        Habit saved = habitRepository.save(habit);
+        return habitMapper.habitToHabitResponse(saved);
     }
 
     @Override
