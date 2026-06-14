@@ -76,6 +76,12 @@ public class HabitServiceImpl implements HabitService{
 
     @Override
     public void delete(UUID id) {
-
+        User user = getCurentUser();
+        Habit habit = habitRepository.findById(id)
+                .orElseThrow(() -> new AppException("Habit not found", HttpStatus.NOT_FOUND));
+        if (!habit.getUser().getId().equals(user.getId())) {
+            throw new AppException("Habit doesn't belong to current user", HttpStatus.FORBIDDEN);
+        }
+        habitRepository.deleteById(id);
     }
 }

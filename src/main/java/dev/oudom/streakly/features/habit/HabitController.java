@@ -50,4 +50,10 @@ public class HabitController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Update habit successfully", data));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
+        habitService.delete(id);
+        return ResponseEntity.ok(ApiResponse.success("Delete habit successfully"));
+    }
 }
