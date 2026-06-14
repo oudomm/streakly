@@ -28,7 +28,7 @@ public class Habit {
     @Column(nullable = false)
     private LocalDate createdAt;
 
-    private boolean isActive;
+    private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -37,6 +37,6 @@ public class Habit {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDate.now();
-        this.isActive = true;
+        this.active = true;
     }
 }

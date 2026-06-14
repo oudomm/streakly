@@ -8,6 +8,6 @@ public record HabitResponse(
         String name,
         String description,
         LocalDate createdAt,
-        boolean isActive
+        boolean active
 ) {
 }
