@@ -1,4 +1,12 @@
 package dev.oudom.streakly.features.habit.log.dto;
 
-public record HabitLogResponse() {
+import java.time.LocalDate;
+import java.util.UUID;
+
+public record HabitLogResponse(
+        UUID id,
+        UUID habitId,
+        LocalDate logDate,
+        boolean completed
+) {
 }
