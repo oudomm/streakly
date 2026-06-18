@@ -1,6 +1,7 @@
 package dev.oudom.streakly.features.habit.log;
 
 import dev.oudom.streakly.exception.AppException;
+import dev.oudom.streakly.features.auth.dto.HabitStreakResponse;
 import dev.oudom.streakly.features.habit.Habit;
 import dev.oudom.streakly.features.habit.HabitRepository;
 import dev.oudom.streakly.features.habit.log.dto.HabitLogResponse;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,5 +56,30 @@ public class HabitLogServiceImpl implements HabitLogService {
         habitLog.setCompleted(true);
         HabitLog saved = habitLogRepository.save(habitLog);
         return habitLogMapper.habitLogToHabitLogResponse(saved);
+    }
+
+    @Override
+    public HabitStreakResponse getStreak(UUID habitId) {
+        log.info("getStreak: {}", habitId);
+
+        List<HabitLog> habitLog = habitLogRepository.findByHabitIdOrderByLogDateDesc(habitId);
+
+        int currentStreak = 0;
+        LocalDate expected = LocalDate.now();
+
+        for (HabitLog log : habitLog) {
+            if (log.getLogDate().equals(expected)) {
+                currentStreak++;
+                expected = expected.minusDays(1);
+            } else {
+                break;
+            }
+        }
+
+        return HabitStreakResponse.builder()
+                .habitId(habitId)
+                .currentStreak(currentStreak)
+                .build();
+
     }
 }
