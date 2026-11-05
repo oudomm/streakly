@@ -76,9 +76,25 @@ public class HabitLogServiceImpl implements HabitLogService {
             }
         }
 
+        int bestStreak = 0;
+        int streak = 0;
+        LocalDate previousDate = null;
+        for (HabitLog log : habitLog) {
+            if (previousDate == null) {
+                streak = 1;
+            } else if (log.getLogDate().equals(previousDate.minusDays(1))) {
+                streak++;
+            } else {
+                streak = 1;
+            }
+            bestStreak = Math.max(bestStreak, streak);
+            previousDate = log.getLogDate();
+        }
+
         return HabitStreakResponse.builder()
                 .habitId(habitId)
                 .currentStreak(currentStreak)
+                .bestStreak(bestStreak)
                 .build();
 
     }
